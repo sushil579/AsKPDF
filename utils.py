@@ -22,7 +22,6 @@ def make_prompt(data, question):
 
 
 def get_data_and_source(res_docs):
-    print(res_docs)
     data_content = [chunk.page_content for chunk in res_docs]
     source = [chunk.metadata['source'] for chunk in res_docs]
     return data_content, source
