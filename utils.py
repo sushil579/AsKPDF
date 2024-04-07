@@ -1,9 +1,5 @@
 from langchain_community.document_loaders import PyPDFLoader
-from dotenv import load_dotenv
 from pathlib import Path
-
-
-load_dotenv(".env")
 
 
 def add_system_message(message, content):
@@ -23,14 +19,16 @@ def make_prompt(data, question):
 
 def get_data_and_source(res_docs):
     data_content = [chunk.page_content for chunk in res_docs]
-    source = [chunk.metadata['source'] for chunk in res_docs]
-    return data_content, source
+    metadata = [chunk.metadata for chunk in res_docs]
+    return data_content, metadata
 
 
 def make_init_message(data_content, question):
     messages = []
     messages = add_system_message(
-        messages, "You will be given data and the question ,provide answer based on the data")
+        messages,
+        "You will be given data and the question ,provide answer based on the data",
+    )
 
     prompt = make_prompt(data_content, question)
 

@@ -1,25 +1,43 @@
+import tempfile
 
+import streamlit
 
 from llm import openAIPDF
 from utils import get_data_and_source, make_init_message, pdf_loader
 
+streamlit.title("AskPDF")
 
-query = input("Enter question here")
-pdf_path = r"C:\Users\Daku\Desktop\ChatPDF\GeneralBiology.pdf"
-model = "gpt-3.5-turbo"
+streamlit.write("Welcome to ChatPDF! Please upload the pdf,enter your query below:")
 
-pages = pdf_loader(pdf_path)
+with streamlit.sidebar:
+    streamlit.write("Please select the model you want to use:")
 
-gpt = openAIPDF(model)
-gpt.embed_documents(pages)
+    model = streamlit.selectbox("Select Model", ["gpt-3.5-turbo-0125", "Ollama"])
 
-res_docs = gpt.similarity_search(query, k=2)
+    if model == "gpt-3.5-turbo-0125":
+        api_key = streamlit.text_input("openai api key")
+        llm = openAIPDF(model, api_key)
+        pdf = streamlit.file_uploader("Upload PDF")
 
+query = streamlit.text_input("Query")
 
-data_content, source = get_data_and_source(res_docs)
+if pdf is not None:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+        tmp.write(pdf.read())
+        tmp_path = tmp.name
 
-messages = make_init_message(data_content, query)
+    pages = pdf_loader(tmp_path)
 
-output = gpt.chat(messages)
+    llm.embed_documents(pages)
 
-print(output)
+    if streamlit.button("Send"):
+        res_docs = llm.similarity_search(query, k=2)
+        data_content, metadata = get_data_and_source(res_docs)
+        sources = [m["page"] for m in metadata]
+        messages = make_init_message(data_content, query)
+        output = llm.chat(messages)
+        streamlit.write(output)
+        streamlit.write("\n\n Sourced from pages")
+        streamlit.write(sources)
+else:
+    streamlit.write("Please upload a PDF to chat")
