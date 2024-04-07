@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import os
 from langchain_community.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
-from utils import make_init_message
 
 message = []
 
@@ -23,7 +22,7 @@ class openAIGPT():
     def similarity_search(self, query):
         self.query = query
         retriever = self.vector_db.as_retriever(
-            search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.5, "k": 2})
+            search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.6, "k": 2})
         res_docs = retriever.get_relevant_documents(query)
         return res_docs
 
@@ -34,4 +33,4 @@ class openAIGPT():
             messages=messages
         )
 
-        return completion.choices[0].message
+        return completion.choices[0].message.content
