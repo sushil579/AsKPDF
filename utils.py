@@ -8,3 +8,4 @@ def add_user_message(message , content):
 
 def make_prompt(data , question):
     prompt = f"data - {data} , question : {question} "
+    return prompt

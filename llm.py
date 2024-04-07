@@ -1,7 +1,8 @@
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
-
+from langchain_community.vectorstores import FAISS
+from langchain.embeddings import OpenAIEmbeddings
 from utils import add_system_message, add_user_message, make_prompt
 
 message = []
@@ -14,6 +15,14 @@ class openAIGPT():
         self.client = OpenAI(api_key=api_key)
         self.model = model
 
+    def embed_documents(self , documents):
+        embeddings = OpenAIEmbeddings()
+        self.vector_db = FAISS.from_documents(documents, embeddings)
+
+    def similarity_search(self , query):
+        retriever = self.vector_db.as_retriever(search_type="similarity_score_threshold" , search_kwargs={"score_threshold": 0.5 , "k":2})
+        res_docs = retriever.get_relevant_documents(query)
+        return res_docs
    
     def completion(self, data ,question):
         messages = []

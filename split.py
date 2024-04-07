@@ -3,7 +3,6 @@ from langchain_community.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from dotenv import load_dotenv
 
-import os
 
 from pathlib import Path
 
