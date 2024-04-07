@@ -7,7 +7,7 @@ from langchain.embeddings import OpenAIEmbeddings
 message = []
 
 
-class openAIGPT():
+class openAIPDF():
 
     def __init__(self,  model="gpt-3.5-turbo"):
         load_dotenv(".env")
@@ -19,14 +19,14 @@ class openAIGPT():
         embeddings = OpenAIEmbeddings()
         self.vector_db = FAISS.from_documents(documents, embeddings)
 
-    def similarity_search(self, query):
+    def similarity_search(self, query, k):
         self.query = query
         retriever = self.vector_db.as_retriever(
-            search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.6, "k": 2})
+            search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.6, "k": k})
         res_docs = retriever.get_relevant_documents(query)
         return res_docs
 
-    def completion(self, messages):
+    def chat(self, messages):
 
         completion = self.client.chat.completions.create(
             model=self.model,

@@ -1,6 +1,4 @@
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_community.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -24,8 +22,9 @@ def make_prompt(data, question):
 
 
 def get_data_and_source(res_docs):
+    print(res_docs)
     data_content = [chunk.page_content for chunk in res_docs]
-    source = []
+    source = [chunk.metadata['source'] for chunk in res_docs]
     return data_content, source
 
 
@@ -33,7 +32,6 @@ def make_init_message(data_content, question):
     messages = []
     messages = add_system_message(
         messages, "You will be given data and the question ,provide answer based on the data")
-    data_content, source = get_data_and_source(data_content)
 
     prompt = make_prompt(data_content, question)
 
