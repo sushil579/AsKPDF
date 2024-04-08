@@ -1,7 +1,8 @@
 import os
 
+import ollama
 from dotenv import load_dotenv
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import OllamaEmbeddings, OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from openai import OpenAI
 
@@ -34,3 +35,21 @@ class openAIPDF:
         )
 
         return completion.choices[0].message.content
+
+
+class OllamaPDF:
+    def __init__(self, model="llama2"):
+        self.model = model
+
+    def embed_documents(self, pages):
+        embeddings = OllamaEmbeddings()
+        self.vector_db = FAISS.from_documents(pages, embeddings)
+
+    def similarity_search(self, query, k=2):
+        self.question = query
+        docs = self.vector_db.similarity_search(query, k=k)
+        return docs
+
+    def chat(self, messages):
+        response = ollama.chat(model=self.model, messages=messages)
+        return response["message"]["content"]
