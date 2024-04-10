@@ -15,9 +15,15 @@ with streamlit.sidebar:
     model = streamlit.selectbox("Select Model", ["gpt-3.5-turbo-0125", "Ollama"])
 
     if model == "gpt-3.5-turbo-0125":
-        api_key = streamlit.text_input("openai api key")
-        llm = openAIPDF(model, api_key)
-        pdf = streamlit.file_uploader("Upload PDF")
+        api_key = streamlit.text_input("openai api key", type='password')
+        if not api_key:
+            streamlit.warning("Please enter the API key.")
+        else:
+            llm = openAIPDF(model, api_key)
+    elif model == "Ollama":
+        llm = OllamaPDF()    
+    
+    pdf = streamlit.file_uploader("Upload PDF")
 
 query = streamlit.text_input("Query")
 
