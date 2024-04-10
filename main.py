@@ -7,7 +7,7 @@ from utils import get_data_and_source, make_init_message, pdf_loader
 
 streamlit.title("AskPDF")
 
-streamlit.write("Welcome to ChatPDF! Please upload the pdf,enter your query below:")
+streamlit.write("Welcome to AsKPDF! Please upload the pdf,enter your query below:")
 
 with streamlit.sidebar:
     streamlit.write("Please select the model you want to use:")
