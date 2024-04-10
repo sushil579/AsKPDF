@@ -12,7 +12,8 @@ class openAIPDF:
         if not api_key:
             load_dotenv(".env")
             api_key = os.environ["OPENAI_API_KEY"]
-
+        else:
+            os.environ["OPENAI_API_KEY"] = api_key
         self.client = OpenAI(api_key=api_key)
         self.model = model
 
