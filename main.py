@@ -4,6 +4,8 @@ import streamlit
 
 from llm import openAIPDF , OllamaPDF
 from utils import get_data_and_source, make_init_message, pdf_loader
+from streamlit_pdf_reader import pdf_reader
+
 
 streamlit.title("AskPDF")
 
@@ -22,6 +24,9 @@ with streamlit.sidebar:
     
     pdf = streamlit.file_uploader("Upload PDF")
 
+    if pdf:
+        pdf_reader(pdf)
+
 query = streamlit.text_input("Query")
 
 if pdf is not None:
@@ -29,6 +34,7 @@ if pdf is not None:
         tmp.write(pdf.read())
         tmp_path = tmp.name
 
+    
     pages = pdf_loader(tmp_path)
 
     llm.embed_documents(pages)
