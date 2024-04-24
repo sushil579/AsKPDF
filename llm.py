@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 from langchain_community.embeddings import OllamaEmbeddings, OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from openai import OpenAI
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 
 
 class openAIPDF:

@@ -2,7 +2,7 @@ import tempfile
 
 import streamlit
 
-from llm import openAIPDF
+from llm import openAIPDF , OllamaPDF
 from utils import get_data_and_source, make_init_message, pdf_loader
 
 streamlit.title("AskPDF")
@@ -17,7 +17,10 @@ with streamlit.sidebar:
     if model == "gpt-3.5-turbo-0125":
         api_key = streamlit.text_input("openai api key")
         llm = openAIPDF(model, api_key)
-        pdf = streamlit.file_uploader("Upload PDF")
+    else:
+        llm = OllamaPDF()
+    
+    pdf = streamlit.file_uploader("Upload PDF")
 
 query = streamlit.text_input("Query")
 
